@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"net/http"
 
 	"github.com/gin-gonic/gin"
 )
@@ -11,13 +12,13 @@ func main() {
 	router := gin.Default()
 
 	router.GET("/login", func(c *gin.Context) {
-		c.JSON(200, gin.H{
+		c.JSON(http.StatusOK, gin.H{
 			"message": "login",
 		})
 	})
 
-	router.POST("/registter", func(ctx *gin.Context) {
-		ctx.JSON(200, gin.H{
+	router.POST("/register", func(ctx *gin.Context) {
+		ctx.JSON(http.StatusCreated, gin.H{
 			"message": "registration",
 		})
 	})
