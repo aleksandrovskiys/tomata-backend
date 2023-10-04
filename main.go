@@ -1,17 +1,15 @@
 package main
 
 import (
-	"fmt"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
 )
 
 func main() {
-	fmt.Println("Hello, world!")
 	router := gin.Default()
 
-	router.GET("/login", func(c *gin.Context) {
+	router.POST("/login", func(c *gin.Context) {
 		c.JSON(http.StatusOK, gin.H{
 			"message": "login",
 		})
