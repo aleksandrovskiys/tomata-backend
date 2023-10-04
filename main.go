@@ -1,7 +1,7 @@
 package main
 
 import (
-	"net/http"
+	"tomata-backend/routers"
 
 	"github.com/gin-gonic/gin"
 )
@@ -9,17 +9,8 @@ import (
 func main() {
 	router := gin.Default()
 
-	router.POST("/login", func(c *gin.Context) {
-		c.JSON(http.StatusOK, gin.H{
-			"message": "login",
-		})
-	})
-
-	router.POST("/register", func(ctx *gin.Context) {
-		ctx.JSON(http.StatusCreated, gin.H{
-			"message": "registration",
-		})
-	})
+	router.POST("/login", routers.Login)
+	router.POST("/register", routers.Register)
 
 	router.Run()
 }

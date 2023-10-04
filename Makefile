@@ -3,3 +3,7 @@ compile:
 
 run:
 	@go run main.go
+
+activate_env:$
+	@export $(grep -v '^#' .env | xargs)
+
