@@ -21,6 +21,16 @@ func (db *InMemoryDatabase) GetUser(email string) (interfaces.User, error) {
 
 }
 
+func (db *InMemoryDatabase) GetUserById(id int) (interfaces.User, error) {
+	for _, user := range db.users {
+		if user.Id == id {
+			return user, nil
+		}
+	}
+
+	return interfaces.User{}, errors.New("User not found")
+}
+
 func (db *InMemoryDatabase) GetUsers() ([]interfaces.User, error) {
 	return db.users, nil
 }
