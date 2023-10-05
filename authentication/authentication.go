@@ -3,6 +3,7 @@ package authentication
 import (
 	"crypto/sha256"
 	"encoding/base64"
+	"errors"
 	"fmt"
 	"os"
 	"time"
@@ -44,4 +45,23 @@ func IssueToken(user interfaces.User) (string, error) {
 	s, err := t.SignedString([]byte(jwtKey))
 
 	return s, err
+}
+
+func ValidateToken(tokenString string) (jwt.StandardClaims, error) {
+	jwtKey := os.Getenv("JWT_KEY")
+
+	claims := jwt.StandardClaims{}
+
+	token, err := jwt.ParseWithClaims(tokenString, &claims, func(token *jwt.Token) (interface{}, error) {
+		return []byte(jwtKey), nil
+	})
+	if err != nil {
+		return jwt.StandardClaims{}, err
+	}
+
+	if !token.Valid {
+		return jwt.StandardClaims{}, errors.New("Invalid token")
+	}
+
+	return claims, nil
 }
