@@ -1,0 +1,8 @@
+.env
+.git
+.vscode
+
+/build
+README.md
+Dockerfile
+docker-compose.yml
