@@ -23,6 +23,7 @@ func getHostname() string {
 
 func main() {
 	router := gin.Default()
+	router.Use(middlewares.AllowCORS())
 	router.Use(middlewares.Database())
 
 	router.POST("/login", routers.Login)

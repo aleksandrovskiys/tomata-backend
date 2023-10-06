@@ -29,7 +29,7 @@ func Register(ctx *gin.Context) {
 
 	if err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{
-			"message": "This email is already registered",
+			"message": "This email is already taken",
 		})
 		return
 	}
