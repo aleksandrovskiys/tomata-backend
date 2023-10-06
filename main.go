@@ -4,6 +4,7 @@ import (
 	"os"
 	"tomata-backend/middlewares"
 	"tomata-backend/routers"
+	"tomata-backend/routers/pomodoros"
 
 	"github.com/gin-gonic/gin"
 )
@@ -22,14 +23,18 @@ func getHostname() string {
 
 func main() {
 	router := gin.Default()
+	router.Use(middlewares.Database())
 
 	router.POST("/login", routers.Login)
 	router.POST("/register", routers.Register)
 
-	userInfo := router.Group("/users")
-	userInfo.Use(middlewares.AuthRequired())
+	users := router.Group("/users")
+	users.Use(middlewares.AuthRequired())
 
-	userInfo.GET("/me", routers.UserInfo)
+	users.GET("/me", routers.UserInfo)
+	users.POST("/pomodoros", pomodoros.AddPomodoro)
+	users.GET("/pomodoros", pomodoros.GetUserPomodoros)
+	users.GET("/tasks", pomodoros.GetUserTasks)
 
 	router.Run(getHostname())
 }

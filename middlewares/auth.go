@@ -4,6 +4,7 @@ import (
 	"strconv"
 	"strings"
 	"tomata-backend/authentication"
+	"tomata-backend/interfaces"
 
 	"github.com/gin-gonic/gin"
 )
@@ -22,6 +23,16 @@ func AuthRequired() gin.HandlerFunc {
 			return
 		}
 		id, err := strconv.Atoi(claims.Id)
-		ctx.Set("userId", id)
+		db := ctx.MustGet("db").(interfaces.Database)
+
+		user, err := db.GetUserById(id)
+
+		if err != nil {
+			ctx.AbortWithStatusJSON(401, gin.H{
+				"message": "Unauthorized",
+			})
+		}
+
+		ctx.Set("user", user)
 	}
 }

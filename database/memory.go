@@ -7,7 +7,8 @@ import (
 )
 
 type InMemoryDatabase struct {
-	users []interfaces.User
+	users     []interfaces.User
+	pomodoros []interfaces.Pomodoro
 }
 
 func (db *InMemoryDatabase) GetUser(email string) (interfaces.User, error) {
@@ -63,4 +64,65 @@ func (db *InMemoryDatabase) DeleteUser(user interfaces.User) error {
 	}
 
 	return errors.New("User not found")
+}
+
+func (db *InMemoryDatabase) AddPomodoro(pomodoro interfaces.AddPomodoroRequestSchema, user interfaces.User) (interfaces.Pomodoro, error) {
+	newPomodoro := interfaces.Pomodoro{
+		Id:        len(db.pomodoros) + 1,
+		Task:      pomodoro.Task,
+		StartTime: pomodoro.StartTime,
+		Duration:  pomodoro.Duration,
+		User:      user,
+	}
+	db.pomodoros = append(db.pomodoros, newPomodoro)
+	return newPomodoro, nil
+}
+
+func (db *InMemoryDatabase) GetPomodoros(user interfaces.User) []interfaces.Pomodoro {
+	var pomodoros []interfaces.Pomodoro
+
+	for _, pomodoro := range db.pomodoros {
+		if pomodoro.User.Id == user.Id {
+			pomodoros = append(pomodoros, pomodoro)
+		}
+	}
+
+	return pomodoros
+}
+
+func (db *InMemoryDatabase) GetPomodoroById(id int) (interfaces.Pomodoro, error) {
+	for _, pomodoro := range db.pomodoros {
+		if pomodoro.Id == id {
+			if pomodoro.User.Id == id {
+				return pomodoro, nil
+			} else {
+				return interfaces.Pomodoro{}, errors.New("Pomodoro not found")
+			}
+		}
+	}
+
+	return interfaces.Pomodoro{}, errors.New("Pomodoro not found")
+}
+
+func (db *InMemoryDatabase) DeletePomodoro(pomodoro interfaces.Pomodoro) error {
+	for i, p := range db.pomodoros {
+		if p.Id == pomodoro.Id && p.User.Id == pomodoro.User.Id {
+			db.pomodoros = append(db.pomodoros[:i], db.pomodoros[i+1:]...)
+			return nil
+		}
+	}
+
+	return errors.New("Pomodoro not found")
+}
+
+func (db *InMemoryDatabase) GetUserTasks(user interfaces.User) []string {
+	var tasks []string
+
+	for _, pomodoro := range db.pomodoros {
+		if pomodoro.User.Id == user.Id {
+			tasks = append(tasks, pomodoro.Task)
+		}
+	}
+
+	return tasks
 }
