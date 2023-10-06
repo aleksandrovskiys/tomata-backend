@@ -11,7 +11,7 @@ func UserInfo(ctx *gin.Context) {
 	user := ctx.MustGet("user").(interfaces.User)
 
 	ctx.JSON(http.StatusOK, gin.H{
-		"message": "Hello world!",
+		"message": "ok",
 		"user":    user,
 	})
 }
