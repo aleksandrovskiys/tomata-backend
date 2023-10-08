@@ -12,10 +12,15 @@ func AddPomodoro(ctx *gin.Context) {
 	user := ctx.MustGet("user").(interfaces.User)
 	pomodoro := interfaces.AddPomodoroRequestSchema{}
 
-	ctx.BindJSON(&pomodoro)
+	err := ctx.BindJSON(&pomodoro)
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{
+			"error": err.Error(),
+		})
+		return
+	}
 
 	db := ctx.MustGet("db").(interfaces.Database)
-
 	newPomodoro, err := db.AddPomodoro(pomodoro, user)
 
 	if err != nil {

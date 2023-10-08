@@ -68,18 +68,18 @@ func (db *InMemoryDatabase) DeleteUser(user interfaces.User) error {
 
 func (db *InMemoryDatabase) AddPomodoro(pomodoro interfaces.AddPomodoroRequestSchema, user interfaces.User) (interfaces.Pomodoro, error) {
 	newPomodoro := interfaces.Pomodoro{
-		Id:        len(db.pomodoros) + 1,
-		Task:      pomodoro.Task,
-		StartTime: pomodoro.StartTime,
-		Duration:  pomodoro.Duration,
-		User:      user,
+		Id:       len(db.pomodoros) + 1,
+		Task:     pomodoro.Task,
+		Finished: pomodoro.Finished,
+		Duration: pomodoro.Duration,
+		User:     user,
 	}
 	db.pomodoros = append(db.pomodoros, newPomodoro)
 	return newPomodoro, nil
 }
 
 func (db *InMemoryDatabase) GetPomodoros(user interfaces.User) []interfaces.Pomodoro {
-	var pomodoros []interfaces.Pomodoro
+	pomodoros := []interfaces.Pomodoro{}
 
 	for _, pomodoro := range db.pomodoros {
 		if pomodoro.User.Id == user.Id {

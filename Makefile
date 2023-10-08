@@ -6,7 +6,7 @@ run:
 
 rerun_container:
 	@docker compose down
-	@docker compose up -d
+	@docker compose up -d --build
 
 build_container:
 	@docker compose build
