@@ -1,4 +1,5 @@
 build
 .vscode
 .env
+__debug*
 tomata.db
