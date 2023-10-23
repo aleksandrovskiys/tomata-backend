@@ -1,6 +1,7 @@
 package database
 
 import (
+	"errors"
 	"fmt"
 	"tomata-backend/interfaces"
 
@@ -80,10 +81,17 @@ func (db *RelationalDB) GetUsers() ([]interfaces.User, error) {
 	return interfaceUsers, nil
 }
 
-func (db *RelationalDB) AddUser(email string, password string) (interfaces.User, error) {
+func (db *RelationalDB) AddUser(email string, password string, googleId string) (interfaces.User, error) {
+	_, err := db.GetUser(email)
+
+	if err == nil {
+		return interfaces.User{}, errors.New("user already exists")
+	}
+
 	user := User{
 		Email:    email,
 		Password: password,
+		GoogleID: googleId,
 	}
 
 	result := db.instance.Create(&user)
@@ -181,6 +189,7 @@ func (db *RelationalDB) convertUserToInterface(user User) interfaces.User {
 		Id:       int(user.ID),
 		Email:    user.Email,
 		Password: user.Password,
+		GoogleID: user.GoogleID,
 	}
 }
 

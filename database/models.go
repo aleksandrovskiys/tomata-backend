@@ -21,5 +21,6 @@ type User struct {
 
 	Email     string
 	Password  string
+	GoogleID  string
 	Pomodoros []Pomodoro
 }

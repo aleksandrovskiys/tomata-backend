@@ -29,6 +29,9 @@ func main() {
 
 	router.POST("/login", routers.Login)
 	router.POST("/register", routers.Register)
+	router.POST("/google-auth/register", routers.RegisterUsingGoogleOpenID)
+	router.POST("/google-auth/login", routers.LoginWithGoogle)
+	router.GET("/anti-forgery-token", routers.GetAntiForgeryToken)
 
 	users := router.Group("/users")
 	users.Use(middlewares.AuthRequired())

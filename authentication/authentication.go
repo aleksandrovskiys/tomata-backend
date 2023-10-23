@@ -49,12 +49,16 @@ func IssueToken(user interfaces.User) (string, error) {
 
 func ValidateToken(tokenString string) (jwt.StandardClaims, error) {
 	jwtKey := os.Getenv("JWT_KEY")
+	return extractClaims(tokenString, jwtKey)
+}
 
+func extractClaims(tokenString string, jwtKey string) (jwt.StandardClaims, error) {
 	claims := jwt.StandardClaims{}
 
 	token, err := jwt.ParseWithClaims(tokenString, &claims, func(token *jwt.Token) (interface{}, error) {
 		return []byte(jwtKey), nil
 	})
+
 	if err != nil {
 		return jwt.StandardClaims{}, err
 	}
@@ -64,4 +68,28 @@ func ValidateToken(tokenString string) (jwt.StandardClaims, error) {
 	}
 
 	return claims, nil
+}
+
+func GenerateState() string {
+	hash := sha256.New()
+	_, err := hash.Write([]byte(time.Now().String()))
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Error: %v\n", err)
+		return ""
+	}
+	return base64.URLEncoding.EncodeToString(hash.Sum(nil))
+}
+
+func GetUserInfoFromToken(token string) (interfaces.GoogleLoginDataSchema, error) {
+	claims := jwt.MapClaims{}
+	_, _, err := new(jwt.Parser).ParseUnverified(token, &claims)
+
+	if err != nil {
+		return interfaces.GoogleLoginDataSchema{}, err
+	}
+	return interfaces.GoogleLoginDataSchema{
+		Email:    claims["email"].(string),
+		Name:     claims["name"].(string),
+		GoogleID: claims["sub"].(string),
+	}, nil
 }
