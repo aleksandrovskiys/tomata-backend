@@ -13,4 +13,8 @@ type Database interface {
 	DeletePomodoro(pomodoro Pomodoro) error
 
 	GetUserTasks(user User) []string
+
+	Init()
+	Migrate() error
+	Initialized() bool
 }

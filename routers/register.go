@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"net/http"
 	"os"
+	"tomata-backend/authentication"
 	"tomata-backend/database"
 	"tomata-backend/interfaces"
 
@@ -25,7 +26,7 @@ func Register(ctx *gin.Context) {
 		return
 	}
 
-	user, err := db.AddUser(loginData.Email, loginData.Password)
+	user, err := db.AddUser(loginData.Email, authentication.GeneratePasswordHash(loginData.Password))
 
 	if err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{

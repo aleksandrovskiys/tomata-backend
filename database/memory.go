@@ -2,13 +2,13 @@ package database
 
 import (
 	"errors"
-	"tomata-backend/authentication"
 	"tomata-backend/interfaces"
 )
 
 type InMemoryDatabase struct {
-	users     []interfaces.User
-	pomodoros []interfaces.Pomodoro
+	users       []interfaces.User
+	pomodoros   []interfaces.Pomodoro
+	initialized bool
 }
 
 func (db *InMemoryDatabase) GetUser(email string) (interfaces.User, error) {
@@ -46,7 +46,7 @@ func (db *InMemoryDatabase) AddUser(email string, password string) (interfaces.U
 	user = interfaces.User{
 		Id:       len(db.users) + 1,
 		Email:    email,
-		Password: authentication.GeneratePasswordHash(password),
+		Password: password,
 	}
 
 	db.users = append(db.users, user)
@@ -125,4 +125,21 @@ func (db *InMemoryDatabase) GetUserTasks(user interfaces.User) []string {
 	}
 
 	return tasks
+}
+
+func (db *InMemoryDatabase) Migrate() error {
+	return nil
+}
+
+func (db *InMemoryDatabase) Init() {
+	if db.Initialized() {
+		return
+	}
+	db.users = []interfaces.User{}
+	db.pomodoros = []interfaces.Pomodoro{}
+	db.initialized = true
+}
+
+func (db *InMemoryDatabase) Initialized() bool {
+	return db.initialized
 }

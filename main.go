@@ -2,6 +2,7 @@ package main
 
 import (
 	"os"
+	"tomata-backend/database"
 	"tomata-backend/middlewares"
 	"tomata-backend/routers"
 	"tomata-backend/routers/pomodoros"
@@ -36,6 +37,8 @@ func main() {
 	users.POST("/pomodoros", pomodoros.AddPomodoro)
 	users.GET("/pomodoros", pomodoros.GetUserPomodoros)
 	users.GET("/tasks", pomodoros.GetUserTasks)
+	db := database.GetDB()
+	db.Init()
 
 	router.Run(getHostname())
 }
