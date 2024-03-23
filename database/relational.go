@@ -18,7 +18,7 @@ func (db *RelationalDB) Init() {
 	if db.Initialized() {
 		return
 	}
-	instance, err := gorm.Open(sqlite.Open("tomata.db"), &gorm.Config{})
+	instance, err := gorm.Open(sqlite.Open("./db/tomata.db"), &gorm.Config{})
 	if err != nil {
 		panic("Failed to create database connection")
 	}

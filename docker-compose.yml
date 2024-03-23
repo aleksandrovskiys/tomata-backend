@@ -1,6 +1,14 @@
-version: '3'
+version: "3"
 services:
   tomata-backend:
     build: .
     ports:
       - "8080:80"
+    volumes:
+      - tomata-db:/app/db
+    env_file:
+      - .env
+
+volumes:
+  tomata-db:
+    driver: local
