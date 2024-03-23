@@ -22,10 +22,18 @@ func getHostname() string {
 	return hostname
 }
 
+func healthcheck(ctx *gin.Context) {
+	ctx.JSON(200, gin.H{
+		"message": "OK",
+	})
+}
+
 func main() {
 	router := gin.Default()
 	router.Use(middlewares.AllowCORS())
 	router.Use(middlewares.Database())
+
+	router.GET("/healthcheck", healthcheck)
 
 	router.POST("/login", routers.Login)
 	router.POST("/register", routers.Register)
